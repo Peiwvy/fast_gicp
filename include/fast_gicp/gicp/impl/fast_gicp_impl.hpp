@@ -125,6 +125,7 @@ void FastGICP<PointSource, PointTarget>::update_correspondences(const Eigen::Iso
   std::vector<int> k_indices(1);
   std::vector<float> k_sq_dists(1);
 
+// 使用omp并行计算，input_中每个点云的对应点计算
 #pragma omp parallel for num_threads(num_threads_) firstprivate(k_indices, k_sq_dists) schedule(guided, 8)
   for (int i = 0; i < input_->size(); i++) {
     PointTarget pt;
@@ -236,6 +237,7 @@ double FastGICP<PointSource, PointTarget>::compute_error(const Eigen::Isometry3d
   return sum_errors;
 }
 
+// 输入cloud，返回协方差矩阵vector，和kdtree
 template <typename PointSource, typename PointTarget>
 template <typename PointT>
 bool FastGICP<PointSource, PointTarget>::calculate_covariances(
@@ -247,12 +249,14 @@ bool FastGICP<PointSource, PointTarget>::calculate_covariances(
   }
   covariances.resize(cloud->size());
 
+// 下面代码 使用并行计算 线程书为 num_threads_, schedule  为调度方式 guided
 #pragma omp parallel for num_threads(num_threads_) schedule(guided, 8)
   for (int i = 0; i < cloud->size(); i++) {
     std::vector<int> k_indices;
     std::vector<float> k_sq_distances;
     kdtree.nearestKSearch(cloud->at(i), k_correspondences_, k_indices, k_sq_distances);
 
+    // 计算协方差 提取最近20个点
     Eigen::Matrix<double, 4, -1> neighbors(4, k_correspondences_);
     for (int j = 0; j < k_indices.size(); j++) {
       neighbors.col(j) = cloud->at(k_indices[j]).getVector4fMap().template cast<double>();

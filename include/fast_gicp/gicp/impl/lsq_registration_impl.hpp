@@ -62,10 +62,13 @@ void LsqRegistration<PointTarget, PointSource>::computeTransformation(PointCloud
     std::cout << "********************************************" << std::endl;
   }
 
+  // 迭代优化核心是 step_optimize
   for (int i = 0; i < max_iterations_ && !converged_; i++) {
     nr_iterations_ = i;
 
     Eigen::Isometry3d delta;
+    // x0: 优化后的结果
+    // delta: 最小二乘计算出来的增量
     if (!step_optimize(x0, delta)) {
       std::cerr << "lm not converged!!" << std::endl;
       break;
@@ -81,6 +84,7 @@ void LsqRegistration<PointTarget, PointSource>::computeTransformation(PointCloud
 template <typename PointTarget, typename PointSource>
 bool LsqRegistration<PointTarget, PointSource>::is_converged(const Eigen::Isometry3d& delta) const {
   double accum = 0.0;
+  // delta.linear() , rotation matrix 3*3
   Eigen::Matrix3d R = delta.linear() - Eigen::Matrix3d::Identity();
   Eigen::Vector3d t = delta.translation();
 
@@ -102,15 +106,25 @@ bool LsqRegistration<PointTarget, PointSource>::step_optimize(Eigen::Isometry3d&
   return step_lm(x0, delta);
 }
 
+// 优化环节
+// delta 是变化微量 每次都会重置 返回
 template <typename PointTarget, typename PointSource>
 bool LsqRegistration<PointTarget, PointSource>::step_gn(Eigen::Isometry3d& x0, Eigen::Isometry3d& delta) {
-  Eigen::Matrix<double, 6, 6> H;
-  Eigen::Matrix<double, 6, 1> b;
+  Eigen::Matrix<double, 6, 6> H;  // Hessian
+  Eigen::Matrix<double, 6, 1> b;  // Jacobian
+
+  // 在x0的地方开始线性化
+  // 返回 H, J, y0
   double y0 = linearize(x0, &H, &b);
 
+  // 求解 H * (delta_x)= -J
+  // eigen 内置线性方程组求解 Eigen::LDLT cholesky分解 L：下三角单位矩阵 D为对角阵
+  // LS :https://zhuanlan.zhihu.com/p/360495510
+  // example:  https://www.cnblogs.com/ymd12103410/p/9705792.html
   Eigen::LDLT<Eigen::Matrix<double, 6, 6>> solver(H);
   Eigen::Matrix<double, 6, 1> d = solver.solve(-b);
 
+  // notice: d角度在前，xyz在后
   delta.setIdentity();
   delta.linear() = so3_exp(d.head<3>()).toRotationMatrix();
   delta.translation() = d.tail<3>();
@@ -121,6 +135,7 @@ bool LsqRegistration<PointTarget, PointSource>::step_gn(Eigen::Isometry3d& x0, E
   return true;
 }
 
+// 优化环节
 template <typename PointTarget, typename PointSource>
 bool LsqRegistration<PointTarget, PointSource>::step_lm(Eigen::Isometry3d& x0, Eigen::Isometry3d& delta) {
   Eigen::Matrix<double, 6, 6> H;

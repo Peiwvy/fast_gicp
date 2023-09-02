@@ -58,6 +58,7 @@ void FastVGICP<PointSource, PointTarget>::setInputTarget(const PointCloudTargetC
     return;
   }
 
+  // 调用 GICP 的 setInputTarget
   FastGICP<PointSource, PointTarget>::setInputTarget(cloud);
   voxelmap_.reset();
 }
@@ -79,13 +80,16 @@ void FastVGICP<PointSource, PointTarget>::update_correspondences(const Eigen::Is
     c.reserve((input_->size() * offsets.size()) / num_threads_);
   }
 
+// 找完之后 输入数据的 第i个点 和 voxel 就可以对应起来
 #pragma omp parallel for num_threads(num_threads_) schedule(guided, 8)
   for (int i = 0; i < input_->size(); i++) {
     const Eigen::Vector4d mean_A = input_->at(i).getVector4fMap().template cast<double>();
     Eigen::Vector4d transed_mean_A = trans * mean_A;
+    // 查找 voxel 对应的坐标
     Eigen::Vector3i coord = voxelmap_->voxel_coord(transed_mean_A);
 
     for (const auto& offset : offsets) {
+      // 查找 这个坐标下面有没有 数据 OFFset 是邻近搜索
       auto voxel = voxelmap_->lookup_voxel(coord + offset);
       if (voxel != nullptr) {
         corrs[omp_get_thread_num()].push_back(std::make_pair(i, voxel));
@@ -103,8 +107,11 @@ void FastVGICP<PointSource, PointTarget>::update_correspondences(const Eigen::Is
 
 #pragma omp parallel for num_threads(num_threads_) schedule(guided, 8)
   for (int i = 0; i < voxel_correspondences_.size(); i++) {
+    // corr 是一个 int Gaussion 对
     const auto& corr = voxel_correspondences_[i];
+    // source_covs_ 来自输入点云 是自己计算出来的
     const auto& cov_A = source_covs_[corr.first];
+    // source_covs_ 来自Gaussion
     const auto& cov_B = corr.second->cov;
 
     Eigen::Matrix4d RCR = cov_B + trans.matrix() * cov_A * trans.matrix().transpose();
@@ -132,6 +139,7 @@ double FastVGICP<PointSource, PointTarget>::linearize(const Eigen::Isometry3d& t
     bs[i].setZero();
   }
 
+// Brilliant Work
 #pragma omp parallel for num_threads(num_threads_) reduction(+ : sum_errors) schedule(guided, 8)
   for (int i = 0; i < voxel_correspondences_.size(); i++) {
     const auto& corr = voxel_correspondences_[i];
@@ -162,7 +170,7 @@ double FastVGICP<PointSource, PointTarget>::linearize(const Eigen::Isometry3d& t
     Eigen::Matrix<double, 6, 6> Hi = w * jlossexp.transpose() * voxel_mahalanobis_[i] * jlossexp;
     Eigen::Matrix<double, 6, 1> bi = w * jlossexp.transpose() * voxel_mahalanobis_[i] * error;
 
-    int thread_num = omp_get_thread_num();
+    int thread_num = omp_get_thread_num();  // 获得当前 thread 的id
     Hs[thread_num] += Hi;
     bs[thread_num] += bi;
   }
