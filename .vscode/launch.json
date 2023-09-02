@@ -1,0 +1,240 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "octomap_icp",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/devel/lib/fast_gicp/octomap_icp",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "align kitti",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/devel/lib/fast_gicp/ogicp_test",
+            "args": [
+                "${workspaceFolder}/data/251370668.pcd",
+                "${workspaceFolder}/data/251371071.pcd",
+                // "${workspaceFolder}/build/devel/lib/fast_gicp/test_pcd120.pcd",
+                // "${workspaceFolder}/build/devel/lib/fast_gicp/test_pcd122.pcd",
+                "${workspaceFolder}/tree.ot"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "interacive ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/devel/lib/fast_gicp/interacive",
+            "args": [
+                // "/mnt/hgfs/coding/data/pcd/1624417650.543243050.pcd",
+                // "/mnt/hgfs/coding/data/pcd/1624417652.343533050.pcd"
+                // "data/251371051.pcd",
+                // "data/251370568.pcd"
+                "data/test_pcd3029.pcd"
+                // "data/test_pcd3029.pcd",
+                "2",
+                "-2",
+                "20"
+                // "${workspaceFolder}/build/devel/lib/fast_gicp/test_pcd80.pcd",
+                // "${workspaceFolder}/build/devel/lib/fast_gicp/test_pcd82.pcd"
+                // "${workspaceFolder}/build/devel/lib/fast_gicp/test_pcd133.pcd",
+                // "${workspaceFolder}/build/devel/lib/fast_gicp/test_pcd135.pcd"
+                // "${workspaceFolder}/build/devel/lib/fast_gicp/test_pcd44_new.pcd",
+                // "${workspaceFolder}/build/devel/lib/fast_gicp/test_pcd38_new.pcd"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "interacive_bin ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/devel/lib/fast_gicp/interacive_bin",
+            "args": [
+                // "/mnt/hgfs/coding/data/kitti/05/velodyne",ere
+                "~/kitti/00/velodyne",
+                "3780",
+                "2"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "robust_test ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/devel/lib/fast_gicp/robust_test",
+            "args": [
+                "${workspaceFolder}/data/test_pcd3029.pcd",
+                "~/Desktop/3029_gicp_bool.txt",
+                "~/Desktop/3029_gicp_time.txt"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "kitti ",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/devel/lib/fast_gicp/gicp_kitti",
+            "args": [
+                "../../kitti/06/velodyne/",
+                "~/Desktop/ogicp_Qran5_time.txt",
+                "~/Desktop/ogicp_Qran5_incre.txt"
+                // "/mnt/hgfs/coding/data/kitti/05/velodyne",
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true``
+                }
+            ]
+        },
+        {
+            "name": "build kitti format",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/devel/lib/fast_gicp/gicp_kittigen",
+            "args": [
+                "~/Desktop/ogicp_Qran5_incre.txt",
+                "~/Desktop/ogicp_Qran5_pose.txt"
+                // "~/Desktop/gd_cam.txt",
+                // "~/Desktop/gd_lidar.txt"
+                // "~/Desktop/05.txt",
+                // "~/Desktop/gd_lidar.txt"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "build kitti angle error",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/devel/lib/fast_gicp/gicp_angle",
+            "args": [
+                // "~/Desktop/05/ogicp_Q_incre.txt",
+                // "~/Desktop/05/ogicp_R_incre.txt",
+                // "~/Desktop/05/ogicp_S_incre.txt",
+                // "~/Desktop/05/ndt_4_incre.txt",
+                // "~/Desktop/05/icp__incre.txt",
+                // "~/Desktop/05/ndt_1_incre.txt",
+                // "~/Desktop/05/ndt_4_incre.txt",
+                "~/Desktop/07/ogicp_S_incre.txt",
+                // "~/Desktop/05/ndt_1_incre.txt",
+                // "~/Desktop/05/icp_incre.txt",
+                // "~/Desktop/05/gicp_incre.txt",
+                // "~/Desktop/05.txt",
+                // "~/Desktop/gd_cam.txt",
+                "~/Desktop/07/gd_lidar.txt"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "map_test",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/devel/lib/fast_gicp/map_test",
+            "args": [
+                "~/project/ws_msfl/src/msfl/OUTPUT/kitti/map/cloud.ot",
+                "~/project/ogicp/build/devel/lib/fast_gicp"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}

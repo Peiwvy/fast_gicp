@@ -132,6 +132,25 @@ See [src/align.cpp](https://github.com/SMRT-AIST/fast_gicp/blob/master/src/align
 ```bash
 # Perform frame-by-frame registration
 rosrun fast_gicp gicp_kitti /your/kitti/path/sequences/00/velodyne
+rosrun fast_gicp gicp_kitti /mnt/hgfs/coding/data/kitti/07
+./gicp_kitti /mnt/hgfs/coding/data/kitti/07
+
+evo_traj kitti trajogicp.txt   -p --plot_mode=xyz
+evo_rpe kitti trajogicp.txt  trajogicp_myself.txt 07.txt --delta 1 --plot --plot_mode xyz
+evo_traj kitti trajogicp_myself.txt trajogicp.txt 07.txt -p --plot_mode=xyz
+evo_traj kitti 07_new.txt  -p --plot_mode=xyz
+
+// ok 07
+evo_traj kitti   traj_ogicp_new.txt  traj_pclndt10_new.txt traj_pclicp_new.txt  traj_vgicp20_new.txt    --ref=07_new.txt  -p --plot_mode=xy
+
+evo_rpe kitti  07_new.txt traj_ogicp_new.txt --delta 3 --plot --plot_mode=xy
+// 00
+evo_traj kitti   traj_vgicp20_new.txt  traj_pclndt10_new.txt traj_pclicp_new.txt  traj_ogicp_new.txt --ref=00_new.txt  -p --plot_mode=xy
+
+evo_rpe kitti  00_new.txt traj_pclndt10_new.txt --delta 3 --plot --plot_mode=xy
+
+
+
 ```
 
 ![kitti00](https://user-images.githubusercontent.com/31344317/86207074-b98ac280-bba8-11ea-9687-e65f03aaf25b.png)
